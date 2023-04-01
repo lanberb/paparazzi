@@ -1,3 +1,3 @@
 function main() {
-  console.log('ok')
+  console.log("CD経由のPush");
 }
