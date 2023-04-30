@@ -1,5 +1,11 @@
-node_modules
+# ignore all files…
+**/**
 
-yarn.lock
-.clasp.json
-.gitignore
+# except the extensions…
+!appsscript.json
+!**/*.js
+!**/*.html
+
+# ignore even valid files if in…
+.git/**
+node_modules/**

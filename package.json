@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "setup": "yarn && yarn --cwd ./src/cloud-functions",
+    "open": "yarn clasp open",
+    "server": "http-server -o=./src/cloud-functions/index.html",
+    "init:gas": "yarn clasp create --type standalone --title paparazzi --rootDir ./src/google-apps-script",
+    "deploy:functions": "gcloud functions deploy getSnapshot --region=asia-northeast1 --runtime=nodejs18 --source=./src/cloud-functions --entry-point=getSnapshot --trigger-http"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "@google/clasp": "^2.4.2"
+  }
+}
