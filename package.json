@@ -1,14 +1,16 @@
 {
   "type": "module",
   "scripts": {
-    "build": "esbuild ",
-    "setup": "yarn && yarn --cwd ./src/cloud-functions",
-    "open": "yarn clasp open",
-    "server": "http-server -o=./src/cloud-functions/index.html",
-    "init:gas": "yarn clasp create --type standalone --title paparazzi --rootDir ./src/google-apps-script",
+    "build": "node ./esbuild.config.js",
     "deploy:gas": "clasp push",
     "deploy:functions": "gcloud functions deploy getSnapshot --region=asia-northeast1 --runtime=nodejs18 --source=./src/cloud-functions --entry-point=getSnapshot --trigger-http",
-    "typecheck": "tsc ./src/apps/index.ts --noEmit"
+    "init:gas": "yarn clasp create --type standalone --title paparazzi --rootDir ./src/google-apps-script",
+    "open": "yarn clasp open",
+    "serve": "http-server -o=./dist/index.html",
+    "setup": "yarn && yarn --cwd ./src/cloud-functions",
+    "start": "yarn watch & yarn serve",
+    "typecheck": "tsc ./src/apps/index.ts --noEmit",
+    "watch": "node ./esbuild.config.js -w"
   },
   "dependencies": {
     "react": "^18.2.0",

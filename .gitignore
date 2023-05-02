@@ -1,5 +1,6 @@
+.yarn
+dist
 node_modules
 
-.DS_Store
 .clasp.json
-.yarn
+.DS_Store

@@ -1,28 +1,57 @@
 import esbuild from "esbuild";
 import fs from "fs";
 
-const dist = esbuild.buildSync({
-  entryPoints: ["./src/apps/app.tsx"],
-  bundle: true,
-  minify: true,
-  write: false,
-  format: "esm",
-});
+const path = { dist: "./dist", apps: "./src/apps" };
 
-const htmlFormat = `
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Paparazzi</title>
-  </head>
-  <body>
-    <main id="app"></main>
-    <script>${dist.outputFiles[0].text}</script>
-  </body>
-</html>
-`;
+function main() {
+  if (process.argv.length >= 4) buildError();
+  switch (process.argv[2]) {
+    case "-w":
+      watch();
+      return;
 
-fs.writeFileSync("./src/google-apps-script/index.html", htmlFormat);
+    case undefined:
+      build();
+      return;
+
+    default:
+      buildError();
+      return;
+  }
+}
+main();
+
+function build() {
+  const artifacts = esbuild.buildSync({
+    entryPoints: [`${path.apps}/app.tsx`],
+    bundle: true,
+    minify: true,
+    write: false,
+    format: "esm",
+  });
+
+  const template = fs.readFileSync(`${path.apps}/index.html`, "utf-8");
+  const regex = new RegExp("\\/\\* script \\*\\/", "g");
+  const dist = template.replace(regex, artifacts.outputFiles[0].text);
+
+  !fs.existsSync("./dist") && fs.mkdirSync(path.dist);
+  fs.writeFileSync(`${path.dist}/index.html`, dist);
+}
+
+function buildError() {
+  throw new Error(
+    "Paparazzi Build Command needs 1 optional argument. ['-w' | undefined]"
+  );
+}
+
+function watch() {
+  console.log(`watching...`);
+  fs.watch(
+    `${path.apps}/`,
+    { persistent: true, recursive: true },
+    (event, filename) => {
+      console.log(`📸${event}: ${filename}`);
+      build();
+    }
+  );
+}

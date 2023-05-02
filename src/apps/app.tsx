@@ -9,7 +9,7 @@ if (!root) {
 createRoot(root).render(
   <React.StrictMode>
     <section>
-      <div>あああ</div>
+      <div>ああaa</div>
     </section>
   </React.StrictMode>
 );
